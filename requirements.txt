@@ -6,3 +6,4 @@ scikit-learn
 matplotlib
 opencv-python
 requests
+gdown
