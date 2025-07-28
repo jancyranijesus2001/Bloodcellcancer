@@ -67,30 +67,3 @@ if uploaded_file is not None:
         st.success(f"🩺 Predicted Class: **{prediction}**")
 
 
-def download_file_from_google_drive(file_id, destination):
-    URL = "https://drive.google.com/uc?export=download"
-
-    session = requests.Session()
-    response = session.get(URL, params={'id': file_id}, stream=True)
-
-    # Handle large file confirmation
-    for key, value in response.cookies.items():
-        if key.startswith('download_warning'):
-            response = session.get(URL, params={'id': file_id, 'confirm': value}, stream=True)
-            break
-
-    with open(destination, "wb") as f:
-        for chunk in response.iter_content(32768):
-            if chunk:
-                f.write(chunk)
-
-model_path = "Bestcnn_model.h5"
-file_id = "1NorO6ZiEh09_pcn-3m91Q6dJ-K2NWSoY"
-
-if not os.path.exists(model_path):
-    print("Downloading model from Google Drive...")
-    download_file_from_google_drive(file_id, model_path)
-
-# Now load the model
-import tensorflow as tf
-model = tf.keras.models.load_model(model_path)
